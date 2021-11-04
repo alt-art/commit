@@ -3,6 +3,8 @@ name = "commit"
 version = "0.1.0"
 edition = "2021"
 description = "Command line tool to make convetions in git commit messages"
+readme = "README.md"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -10,3 +12,16 @@ description = "Command line tool to make convetions in git commit messages"
 inquire = "0.2.1"
 serde = { version = "1.0.130", features=["derive"] }
 serde_json = "1.0.68"
+
+[package.metadata.deb]
+name = "commit"
+maintainer = "Pedro Henrique Mendes <pedromendescraft@gmail.com>"
+copyright = "2020, Pedro Henrique Mendes <pedromendescraft@gmail.com>"
+license-file = ["LICENSE", "0"]
+extended-description = "Command line tool to make convetions in git commit messages with custom types feature"
+section = "utils"
+priority = "optional"
+assets = [
+  # Binary
+  ["target/release/commit", "/usr/bin/", "111"],
+]
