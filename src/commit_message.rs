@@ -1,7 +1,7 @@
 use inquire::{
     error::InquireError,
     ui::{Color, RenderConfig, Styled},
-    Confirm, Select, Text,
+    Confirm, Select, Text, required,
 };
 
 use crate::config::{CommitPattern, Config};
@@ -81,20 +81,17 @@ pub fn make_message_commit(pattern: &CommitPattern) -> Result<String, InquireErr
     }
     let description = Text::new("Write a SHORT, IMPERATIVE tense description of the change:")
         .with_render_config(current_config)
+        .with_validator(required!("The description can't be empty"))
         .prompt()?;
-    if description.is_empty() {
-        println!("The description can't be empty");
-        std::process::exit(1);
-    }
     commit_builder.commit_description = description;
-    let body = Text::new("Provide a LONGER description of the change (optional):")
+    let body = Text::new("Provide a LONGER description of the change (Optional):")
         .with_render_config(current_config)
         .with_help_message("Commit body. Press Enter to skip")
         .prompt()?;
     if !body.is_empty() {
         commit_builder.commit_body = Some(body);
     }
-    let footer = Text::new("List any ISSUES CLOSED by this change (optional). E.g.: #31, #34:")
+    let footer = Text::new("List any ISSUES CLOSED by this change E.g.: #31, #34 (Optional):")
         .with_render_config(current_config)
         .with_help_message("Commit footer. Press Enter to skip")
         .prompt()?;
