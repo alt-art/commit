@@ -13,10 +13,15 @@ I made this project for my own use, because I don't want to mess with the origin
 - Show original output of the git command
 
 ## What I want to do
+
 - [ ] Support for external config files
 - [ ] Ability to override the questions
 - [ ] Ability to choose skip questions
 - [ ] Make a wiki page for custom conventional commit message
+
+## Download
+
+[Debian/Ubuntu derivatives](https://github.com/alt-art/commit/releases/download/0.1.0/commit_0.1.0_amd64.deb)
 
 ## How to make a debian package with cargo-deb
 
