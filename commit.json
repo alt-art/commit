@@ -4,7 +4,7 @@
     "scope_prefix": "(",
     "scope_suffix": ")"
   },
-  "types": [
+  "commit_types": [
     { "name": "feat", "description": "A new feature" },
     { "name": "fix", "description": "A bug fix" },
     { "name": "docs", "description": "Documentation only changes" },
@@ -29,8 +29,15 @@
       "description": "Other changes that don't modify src or test files"
     }
   ],
-  "scopes": [
+  "commit_scopes": [
     { "name": "custom", "description": "Custom scope" },
     { "name": "none", "description": "No scope" }
-  ]
+  ],
+  "msg": {
+    "commit_type": "What type of commit you will made?",
+    "commit_scope": "What scope of commit you will made? (Optional)",
+    "commit_description": "Write a SHORT, IMPERATIVE tense description of the change:",
+    "commit_body": "Provide a LONGER description of the change (Optional):",
+    "commit_footer": "List any ISSUES CLOSED by this change E.g.: #31, #34 (Optional):"
+  }
 }

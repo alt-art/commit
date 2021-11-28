@@ -60,16 +60,13 @@ pub fn make_message_commit(pattern: &CommitPattern) -> Result<String, InquireErr
     let prompt_prefix = Styled::new("-").with_fg(Color::LightGreen);
     let current_config = default.with_prompt_prefix(prompt_prefix);
     let mut commit_builder = MessageBuilder::new(pattern.config.clone());
-    let type_choice = Select::new("What type of commit you will made?", pattern.types.clone())
+    let type_choice = Select::new(&pattern.msg.commit_type, pattern.commit_types.clone())
         .with_render_config(current_config)
         .prompt()?;
     commit_builder.commit_type = type_choice.name;
-    let scope_choice = Select::new(
-        "What scope of commit you will made? (Optional)",
-        pattern.scopes.clone(),
-    )
-    .with_render_config(current_config)
-    .prompt()?;
+    let scope_choice = Select::new(&pattern.msg.commit_scope, pattern.commit_scopes.clone())
+        .with_render_config(current_config)
+        .prompt()?;
     if scope_choice.name == "custom" {
         let custom_scope = Text::new("Enter custom scope:")
             .with_render_config(current_config)
@@ -80,19 +77,19 @@ pub fn make_message_commit(pattern: &CommitPattern) -> Result<String, InquireErr
     } else {
         commit_builder.commit_scope = None;
     }
-    let description = Text::new("Write a SHORT, IMPERATIVE tense description of the change:")
+    let description = Text::new(&pattern.msg.commit_description)
         .with_render_config(current_config)
         .with_validator(required!("The description can't be empty"))
         .prompt()?;
     commit_builder.commit_description = description;
-    let body = Text::new("Provide a LONGER description of the change (Optional):")
+    let body = Text::new(&pattern.msg.commit_body)
         .with_render_config(current_config)
         .with_help_message("Commit body. Press Enter to skip")
         .prompt()?;
     if !body.is_empty() {
         commit_builder.commit_body = Some(body);
     }
-    let footer = Text::new("List any ISSUES CLOSED by this change E.g.: #31, #34 (Optional):")
+    let footer = Text::new(&pattern.msg.commit_footer)
         .with_render_config(current_config)
         .with_help_message("Commit footer. Press Enter to skip")
         .prompt()?;
@@ -100,7 +97,7 @@ pub fn make_message_commit(pattern: &CommitPattern) -> Result<String, InquireErr
         commit_builder.commit_footer = Some(footer);
     }
     let message = commit_builder.build();
-    println!("\n  The commit message is:\n\n  {}\n", message);
+    println!("\nThe commit message is:\n\n{}\n", message);
     let confirm = Confirm::new("Do you want to apply the commit?")
         .with_render_config(current_config)
         .with_default(true)

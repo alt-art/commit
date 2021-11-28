@@ -23,10 +23,20 @@ pub struct Type {
 }
 
 #[derive(Deserialize)]
+pub struct Messages {
+    pub commit_type: String,
+    pub commit_scope: String,
+    pub commit_description: String,
+    pub commit_body: String,
+    pub commit_footer: String,
+}
+
+#[derive(Deserialize)]
 pub struct CommitPattern {
     pub config: Config,
-    pub types: Vec<Type>,
-    pub scopes: Vec<Type>,
+    pub commit_types: Vec<Type>,
+    pub commit_scopes: Vec<Type>,
+    pub msg: Messages,
 }
 
 pub fn get_pattern() -> CommitPattern {
