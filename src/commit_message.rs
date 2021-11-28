@@ -1,7 +1,8 @@
 use inquire::{
     error::InquireError,
+    required,
     ui::{Color, RenderConfig, Styled},
-    Confirm, Select, Text, required,
+    Confirm, Select, Text,
 };
 
 use crate::config::{CommitPattern, Config};
