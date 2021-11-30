@@ -14,8 +14,8 @@ I made this project for my own use, because I don't want to mess with the origin
 
 ## What I want to do
 
-- [ ] Support for external config files
-- [ ] Ability to override the questions
+- [x] Support for external config files
+- [x] Ability to override the questions
 - [ ] Ability to choose skip questions
 - [ ] Make a wiki page for custom conventional commit message
 
