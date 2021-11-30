@@ -1,11 +1,11 @@
+use crate::config::{CommitPattern, Config};
+
+use anyhow::{anyhow, Result};
 use inquire::{
-    error::InquireError,
     required,
     ui::{Color, RenderConfig, Styled},
     Confirm, Select, Text,
 };
-
-use crate::config::{CommitPattern, Config};
 
 struct MessageBuilder {
     config: Config,
@@ -55,7 +55,7 @@ impl MessageBuilder {
     }
 }
 
-pub fn make_message_commit(pattern: &CommitPattern) -> Result<String, InquireError> {
+pub fn make_message_commit(pattern: CommitPattern) -> Result<String> {
     let default = RenderConfig::default();
     let prompt_prefix = Styled::new("-").with_fg(Color::LightGreen);
     let current_config = default.with_prompt_prefix(prompt_prefix);
@@ -103,7 +103,7 @@ pub fn make_message_commit(pattern: &CommitPattern) -> Result<String, InquireErr
         .with_default(true)
         .prompt()?;
     if !confirm {
-        return Err(InquireError::OperationCanceled);
+        return Err(anyhow!("Operation was canceled by the user"));
     }
     Ok(message)
 }

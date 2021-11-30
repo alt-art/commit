@@ -1,5 +1,10 @@
+use anyhow::{anyhow, Context, Result};
 use serde::Deserialize;
-use std::fmt::{Display, Formatter, Result};
+use std::fmt::{Display, Formatter, Result as FmtResult};
+use std::fs::File;
+use std::io::Read;
+use std::path::Path;
+use std::path::PathBuf;
 
 #[derive(Deserialize, Clone)]
 pub struct Config {
@@ -11,7 +16,7 @@ pub struct Config {
 }
 
 impl Display for Type {
-    fn fmt(&self, formatter: &mut Formatter) -> Result {
+    fn fmt(&self, formatter: &mut Formatter) -> FmtResult {
         write!(formatter, "{} - {}", self.name, self.description)
     }
 }
@@ -39,14 +44,46 @@ pub struct CommitPattern {
     pub msg: Messages,
 }
 
-pub fn get_pattern() -> CommitPattern {
-    let pattern_str = include_str!("../commit.json");
-    let pattern: CommitPattern = match serde_json::from_str(pattern_str) {
-        Ok(pattern) => pattern,
-        Err(err) => {
-            println!("{}", err);
-            std::process::exit(1);
+fn get_config_path_content(config_path: impl AsRef<Path>) -> Result<String> {
+    let mut file = File::open(config_path)?;
+    let mut content = String::new();
+    file.read_to_string(&mut content)?;
+    Ok(content)
+}
+
+fn select_custom_config_path(config: Option<PathBuf>) -> Result<PathBuf> {
+    match config {
+        Some(config_path) => {
+            if config_path.exists() {
+                Ok(config_path)
+            } else {
+                Err(anyhow!(
+                    "Config file does not exist: {}",
+                    config_path.display()
+                ))
+            }
         }
-    };
-    pattern
+        None => get_config_path(),
+    }
+}
+
+fn get_config_path() -> Result<PathBuf> {
+    let current_dir = std::env::current_dir()?;
+    let current_file = current_dir.join("commit.json");
+    if current_file.exists() {
+        Ok(current_file)
+    } else {
+        let config_file = dirs::config_dir()
+            .ok_or(anyhow!("Could not find config directory"))?
+            .join("commit/commit.json");
+        Ok(config_file)
+    }
+}
+
+pub fn get_pattern(config_path: Option<PathBuf>) -> Result<CommitPattern> {
+    let default_pattern_str = include_str!("../commit.json");
+    let selected_config_path = select_custom_config_path(config_path)?;
+    let pattern_str =
+        get_config_path_content(&selected_config_path).unwrap_or(default_pattern_str.to_string());
+    Ok(serde_json::from_str(&pattern_str).context("Failed to parse commit pattern from file")?)
 }
