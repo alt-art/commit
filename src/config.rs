@@ -81,7 +81,7 @@ fn get_config_path() -> Result<PathBuf> {
 }
 
 pub fn get_pattern(config_path: Option<PathBuf>) -> Result<CommitPattern> {
-    let default_pattern_str = include_str!("../commit.json");
+    let default_pattern_str = include_str!("../commit-default.json");
     let selected_config_path = select_custom_config_path(config_path)?;
     let pattern_str =
         get_config_path_content(&selected_config_path).unwrap_or(default_pattern_str.to_string());
