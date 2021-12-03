@@ -1,6 +1,8 @@
 # Commit
 
-This project is a copy of [cz-cli](https://github.com/commitizen/cz-cli) with some minor changes.
+This command-line interface makes it possible to make patterned (conventional) commit messages to organize your repository.
+
+This project is a clone of [cz-cli](https://github.com/commitizen/cz-cli) with some minor changes.
 
 I made this project for my own use, because I don't want to mess with the original cz-cli.
 
