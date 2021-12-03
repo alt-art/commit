@@ -12,7 +12,7 @@ use commit_message::make_message_commit;
 #[derive(StructOpt)]
 #[structopt(
     name = "commit",
-    about = "A tool to make conventional commit messages",
+    about = "A tool to make patterned (conventional) commit messages",
     author = "Pedro H. M. <pedromendescraft@gmail.com>",
     setting = ColoredHelp,
 )]
