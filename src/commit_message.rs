@@ -70,6 +70,7 @@ pub fn make_message_commit(pattern: CommitPattern) -> Result<String> {
     if scope_choice.name == "custom" {
         let custom_scope = Text::new("Enter custom scope:")
             .with_render_config(current_config)
+            .with_validator(required!("Custom scope can't be empty"))
             .prompt()?;
         commit_builder.commit_scope = Some(custom_scope);
     } else if scope_choice.name != "none" {
