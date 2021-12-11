@@ -23,7 +23,7 @@ I made this project for my own use, because I don't want to mess with the origin
 
 ## Download
 
-[Debian/Ubuntu derivatives](https://github.com/alt-art/commit/releases/download/0.1.0/commit_0.1.0_amd64.deb)
+[Debian/Ubuntu derivatives](https://github.com/alt-art/commit/releases/download/0.2.0/commit_0.2.0_amd64.deb)
 
 ## How to make a debian package with cargo-deb
 
