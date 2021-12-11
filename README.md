@@ -23,7 +23,9 @@ I made this project for my own use, because I don't want to mess with the origin
 
 ## Download
 
-[Debian/Ubuntu derivatives](https://github.com/alt-art/commit/releases/download/0.2.0/commit_0.2.0_amd64.deb)
+[apt derivatives (deb)](https://github.com/alt-art/commit/releases/download/0.2.0/commit_0.2.0_amd64.deb)
+
+[dnf/yum derivatives (rpm)](https://github.com/alt-art/commit/releases/download/0.2.0/commit-0.2.0-1.x86_64.rpm)
 
 ## How to make a debian package with cargo-deb for development
 
