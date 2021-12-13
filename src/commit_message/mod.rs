@@ -1,11 +1,9 @@
+mod prompt;
+
 use crate::config::{CommitPattern, Config};
+use prompt::Prompt;
 
 use anyhow::{anyhow, Result};
-use inquire::{
-    required,
-    ui::{Color, RenderConfig, Styled},
-    Confirm, Select, Text,
-};
 
 struct MessageBuilder {
     config: Config,
@@ -51,50 +49,29 @@ impl MessageBuilder {
 }
 
 pub fn make_message_commit(pattern: CommitPattern) -> Result<String> {
-    let default = RenderConfig::default();
-    let prompt_prefix = Styled::new("-").with_fg(Color::LightGreen);
-    let current_config = default.with_prompt_prefix(prompt_prefix);
-    let mut commit_builder = MessageBuilder::new(pattern.config.clone());
-    let type_choice = Select::new(&pattern.msg.commit_type, pattern.commit_types.clone())
-        .with_render_config(current_config)
-        .prompt()?;
-    commit_builder.set_type(&type_choice.name);
-    let scope_choice = Select::new(&pattern.msg.commit_scope, pattern.commit_scopes.clone())
-        .with_render_config(current_config)
-        .prompt()?;
-    if scope_choice.name == "custom" {
-        let custom_scope = Text::new("Enter custom scope:")
-            .with_render_config(current_config)
-            .with_validator(required!("Custom scope can't be empty"))
-            .prompt()?;
+    let prompt = Prompt::new();
+    let mut commit_builder = MessageBuilder::new(pattern.config);
+    let type_choice = prompt.select(&pattern.msg.commit_type, pattern.commit_types)?;
+    commit_builder.set_type(&type_choice);
+    let scope_choice = prompt.select(&pattern.msg.commit_scope, pattern.commit_scopes)?;
+    if scope_choice == "custom" {
+        let custom_scope = prompt.required_input("Enter custom scope:", "Custom scope")?;
         commit_builder.set_scope(&custom_scope);
-    } else if scope_choice.name != "none" {
-        commit_builder.set_scope(&scope_choice.name);
+    } else if scope_choice != "none" {
+        commit_builder.set_scope(&scope_choice);
     }
-    let description = Text::new(&pattern.msg.commit_description)
-        .with_render_config(current_config)
-        .with_validator(required!("The description can't be empty"))
-        .prompt()?;
+    let description = prompt.required_input(&pattern.msg.commit_description, "Description")?;
     commit_builder.set_description(&description);
-    let body = Text::new(&pattern.msg.commit_body)
-        .with_render_config(current_config)
-        .with_help_message("Commit body. Press Enter to skip")
-        .prompt()?;
+    let body = prompt.optional_input(&pattern.msg.commit_body, "Commit body")?;
     if !body.is_empty() {
         commit_builder.set_body(&body);
     }
-    let footer = Text::new(&pattern.msg.commit_footer)
-        .with_render_config(current_config)
-        .with_help_message("Commit footer. Press Enter to skip")
-        .prompt()?;
+    let footer = prompt.optional_input(&pattern.msg.commit_footer, "Commit footer")?;
     if !footer.is_empty() {
         commit_builder.set_footer(&footer);
     }
     println!("\nThe commit message is:\n\n{}\n", commit_builder.message);
-    let confirm = Confirm::new("Do you want to apply the commit?")
-        .with_render_config(current_config)
-        .with_default(true)
-        .prompt()?;
+    let confirm = prompt.confirm("Do you want to apply the commit?")?;
     if !confirm {
         return Err(anyhow!("Operation was canceled by the user"));
     }
