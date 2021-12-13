@@ -9,49 +9,44 @@ use inquire::{
 
 struct MessageBuilder {
     config: Config,
-    commit_type: String,
-    commit_scope: Option<String>,
-    commit_description: String,
-    commit_body: Option<String>,
-    commit_footer: Option<String>,
+    message: String,
 }
 
 impl MessageBuilder {
     fn new(config: Config) -> MessageBuilder {
         MessageBuilder {
             config,
-            commit_type: String::new(),
-            commit_scope: None,
-            commit_description: String::new(),
-            commit_body: None,
-            commit_footer: None,
+            message: String::new(),
         }
     }
-    fn build(&self) -> String {
-        let mut message = String::new();
+
+    fn set_type(&mut self, commit_type: &str) {
         if let Some(prefix) = &self.config.type_prefix {
-            message.push_str(prefix);
+            self.message.push_str(prefix);
         }
-        message.push_str(&self.commit_type);
+        self.message.push_str(commit_type);
         if let Some(suffix) = &self.config.type_suffix {
-            message.push_str(suffix);
+            self.message.push_str(suffix);
         }
-        if let Some(scope) = &self.commit_scope {
-            message.push_str(&self.config.scope_prefix);
-            message.push_str(scope);
-            message.push_str(&self.config.scope_suffix);
-        }
-        message.push_str(&self.config.subject_separator);
-        message.push_str(&format!(" {}", &self.commit_description));
-        if let Some(body) = &self.commit_body {
-            message.push_str("\n\n");
-            message.push_str(body);
-        }
-        if let Some(footer) = &self.commit_footer {
-            message.push_str("\n\n");
-            message.push_str(footer);
-        }
-        message
+    }
+
+    fn set_scope(&mut self, scope: &str) {
+        self.message.push_str(&self.config.scope_prefix);
+        self.message.push_str(scope);
+        self.message.push_str(&self.config.scope_suffix);
+    }
+
+    fn set_description(&mut self, description: &str) {
+        self.message.push_str(&self.config.subject_separator);
+        self.message.push_str(format!(" {}", description).as_str());
+    }
+
+    fn set_body(&mut self, body: &str) {
+        self.message.push_str(format!("\n\n{}", body).as_str());
+    }
+
+    fn set_footer(&mut self, footer: &str) {
+        self.message.push_str(format!("\n\n{}", footer).as_str());
     }
 }
 
@@ -63,7 +58,7 @@ pub fn make_message_commit(pattern: CommitPattern) -> Result<String> {
     let type_choice = Select::new(&pattern.msg.commit_type, pattern.commit_types.clone())
         .with_render_config(current_config)
         .prompt()?;
-    commit_builder.commit_type = type_choice.name;
+    commit_builder.set_type(&type_choice.name);
     let scope_choice = Select::new(&pattern.msg.commit_scope, pattern.commit_scopes.clone())
         .with_render_config(current_config)
         .prompt()?;
@@ -72,33 +67,30 @@ pub fn make_message_commit(pattern: CommitPattern) -> Result<String> {
             .with_render_config(current_config)
             .with_validator(required!("Custom scope can't be empty"))
             .prompt()?;
-        commit_builder.commit_scope = Some(custom_scope);
+        commit_builder.set_scope(&custom_scope);
     } else if scope_choice.name != "none" {
-        commit_builder.commit_scope = Some(scope_choice.name);
-    } else {
-        commit_builder.commit_scope = None;
+        commit_builder.set_scope(&scope_choice.name);
     }
     let description = Text::new(&pattern.msg.commit_description)
         .with_render_config(current_config)
         .with_validator(required!("The description can't be empty"))
         .prompt()?;
-    commit_builder.commit_description = description;
+    commit_builder.set_description(&description);
     let body = Text::new(&pattern.msg.commit_body)
         .with_render_config(current_config)
         .with_help_message("Commit body. Press Enter to skip")
         .prompt()?;
     if !body.is_empty() {
-        commit_builder.commit_body = Some(body);
+        commit_builder.set_body(&body);
     }
     let footer = Text::new(&pattern.msg.commit_footer)
         .with_render_config(current_config)
         .with_help_message("Commit footer. Press Enter to skip")
         .prompt()?;
     if !footer.is_empty() {
-        commit_builder.commit_footer = Some(footer);
+        commit_builder.set_footer(&footer);
     }
-    let message = commit_builder.build();
-    println!("\nThe commit message is:\n\n{}\n", message);
+    println!("\nThe commit message is:\n\n{}\n", commit_builder.message);
     let confirm = Confirm::new("Do you want to apply the commit?")
         .with_render_config(current_config)
         .with_default(true)
@@ -106,5 +98,5 @@ pub fn make_message_commit(pattern: CommitPattern) -> Result<String> {
     if !confirm {
         return Err(anyhow!("Operation was canceled by the user"));
     }
-    Ok(message)
+    Ok(commit_builder.message)
 }
