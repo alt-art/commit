@@ -8,39 +8,92 @@ use message_build::MessageBuilder;
 use prompt::Prompt;
 
 pub fn make_message_commit(pattern: CommitPattern) -> Result<String> {
-    let prompt = Prompt::new();
-    let mut commit_builder = MessageBuilder::new(pattern.config);
+    let mut message_creator = MessageCreator::new(pattern);
+    message_creator.type_choice()?;
+    message_creator.scope_choice()?;
+    message_creator.description()?;
+    message_creator.body()?;
+    message_creator.footer()?;
+    message_creator.message()
+}
 
-    let type_choice = prompt.select(&pattern.msg.commit_type, pattern.commit_types)?;
-    commit_builder.set_type(&type_choice);
+struct MessageCreator {
+    commit_builder: MessageBuilder,
+    prompt: Prompt,
+    pattern: CommitPattern,
+}
 
-    let scope_choice = prompt.select(&pattern.msg.commit_scope, pattern.commit_scopes)?;
-    if scope_choice == "custom" {
-        let custom_scope = prompt.required_input("Enter custom scope:", "Custom scope")?;
-        commit_builder.set_scope(&custom_scope);
-    } else if scope_choice != "none" {
-        commit_builder.set_scope(&scope_choice);
+impl MessageCreator {
+    fn new(pattern: CommitPattern) -> Self {
+        Self {
+            commit_builder: MessageBuilder::new(pattern.config.clone()),
+            prompt: Prompt::new(),
+            pattern,
+        }
     }
 
-    let description = prompt.required_input(&pattern.msg.commit_description, "Description")?;
-    commit_builder.set_description(&description);
-
-    let body = prompt.optional_input(&pattern.msg.commit_body, "Commit body")?;
-    if !body.is_empty() {
-        commit_builder.set_body(&body);
+    fn type_choice(&mut self) -> Result<()> {
+        let type_choice = self.prompt.select(
+            &self.pattern.msg.commit_type,
+            self.pattern.commit_types.clone(),
+        )?;
+        self.commit_builder.set_type(&type_choice);
+        Ok(())
     }
 
-    let footer = prompt.optional_input(&pattern.msg.commit_footer, "Commit footer")?;
-    if !footer.is_empty() {
-        commit_builder.set_footer(&footer);
+    fn scope_choice(&mut self) -> Result<()> {
+        let scope_choice = self.prompt.select(
+            &self.pattern.msg.commit_scope,
+            self.pattern.commit_scopes.clone(),
+        )?;
+        if scope_choice == "custom" {
+            let custom_scope = self
+                .prompt
+                .required_input("Enter custom scope:", "Custom scope")?;
+            self.commit_builder.set_scope(&custom_scope);
+        } else if scope_choice != "none" {
+            self.commit_builder.set_scope(&scope_choice);
+        }
+        Ok(())
     }
 
-    println!("\nThe commit message is:\n\n{}\n", commit_builder.message);
-
-    let confirm = prompt.confirm("Do you want to apply the commit?")?;
-    if !confirm {
-        return Err(anyhow!("Operation was canceled by the user"));
+    fn description(&mut self) -> Result<()> {
+        let description = self
+            .prompt
+            .required_input(&self.pattern.msg.commit_description, "Description")?;
+        self.commit_builder.set_description(&description);
+        Ok(())
     }
 
-    Ok(commit_builder.message)
+    fn body(&mut self) -> Result<()> {
+        let body = self
+            .prompt
+            .optional_input(&self.pattern.msg.commit_body, "Commit body")?;
+        if !body.is_empty() {
+            self.commit_builder.set_body(&body);
+        }
+        Ok(())
+    }
+
+    fn footer(&mut self) -> Result<()> {
+        let footer = self
+            .prompt
+            .optional_input(&self.pattern.msg.commit_footer, "Commit footer")?;
+        if !footer.is_empty() {
+            self.commit_builder.set_footer(&footer);
+        }
+        Ok(())
+    }
+
+    fn message(&mut self) -> Result<String> {
+        println!(
+            "\nThe commit message is:\n\n{}\n",
+            self.commit_builder.message
+        );
+        let confirm = self.prompt.confirm("Do you want to apply the commit?")?;
+        if !confirm {
+            return Err(anyhow!("Operation was canceled by the user"));
+        }
+        Ok(self.commit_builder.message.clone())
+    }
 }
