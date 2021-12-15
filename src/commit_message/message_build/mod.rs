@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 use crate::config::Config;
 
 pub struct MessageBuilder {
