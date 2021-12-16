@@ -8,24 +8,24 @@ use message_build::MessageBuilder;
 use prompt::Prompt;
 
 pub fn make_message_commit(pattern: CommitPattern) -> Result<String> {
-    let mut message_creator = MessageCreator::new(pattern);
-    message_creator.type_choice()?;
-    message_creator.scope_choice()?;
-    message_creator.description()?;
-    message_creator.body()?;
-    message_creator.footer()?;
-    message_creator.message()
+    let mut message_inquirer = MessageInquirer::new(pattern);
+    message_inquirer.type_choice()?;
+    message_inquirer.scope_choice()?;
+    message_inquirer.description()?;
+    message_inquirer.body()?;
+    message_inquirer.footer()?;
+    message_inquirer.message()
 }
 
-struct MessageCreator {
+struct MessageInquirer {
     commit_builder: MessageBuilder,
     prompt: Prompt,
     pattern: CommitPattern,
 }
 
-impl MessageCreator {
+impl MessageInquirer {
     fn new(pattern: CommitPattern) -> Self {
-        Self {
+        MessageInquirer {
             commit_builder: MessageBuilder::new(pattern.config.clone()),
             prompt: Prompt::new(),
             pattern,
