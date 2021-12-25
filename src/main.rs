@@ -22,6 +22,12 @@ struct Opt {
 }
 
 fn main() -> Result<()> {
+    // Dumb hack to set the current/working directory (pwd) because appimage or cargo-appimage sucks
+    // https://github.com/AppImage/AppImageKit/issues/172
+    if let Some(current_dir) = std::env::var("OWD").ok() {
+        std::env::set_current_dir(current_dir)?;
+    }
+
     let opt = Opt::from_args();
     let pattern = config::get_pattern(opt.config)?;
     let commit_message = make_message_commit(pattern)?;
