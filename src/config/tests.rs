@@ -50,7 +50,7 @@ fn get_pattern_test() -> Result<()> {
     let pattern = get_pattern(None)?;
     assert_eq!(pattern.config.type_prefix, None);
     assert_eq!(pattern.config.type_suffix, None);
-    assert_eq!(pattern.config.subject_separator, ":");
+    assert_eq!(pattern.config.subject_separator, ": ");
     assert_eq!(pattern.config.scope_prefix, "(");
     assert_eq!(pattern.config.scope_suffix, ")");
     Ok(())

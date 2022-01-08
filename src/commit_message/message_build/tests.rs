@@ -17,7 +17,7 @@ fn message_builder_config_test() -> Result<()> {
     let mut config = Config {
         scope_prefix: "(".to_string(),
         scope_suffix: ")".to_string(),
-        subject_separator: ":".to_string(),
+        subject_separator: ": ".to_string(),
         type_prefix: None,
         type_suffix: None,
     };
@@ -31,7 +31,7 @@ fn message_builder_config_test() -> Result<()> {
         message_with_config(config.clone()),
         "[feat](test): description\n\nbody\n\nfooter"
     );
-    config.subject_separator = "".to_string();
+    config.subject_separator = " ".to_string();
     assert_eq!(
         message_with_config(config.clone()),
         "[feat](test) description\n\nbody\n\nfooter"
@@ -50,7 +50,7 @@ fn message_builder_test() -> Result<()> {
     let config = Config {
         scope_prefix: "(".to_string(),
         scope_suffix: ")".to_string(),
-        subject_separator: ":".to_string(),
+        subject_separator: ": ".to_string(),
         type_prefix: None,
         type_suffix: None,
     };
