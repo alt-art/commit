@@ -34,7 +34,7 @@ impl MessageBuilder {
 
     pub fn set_description(&mut self, description: &str) {
         self.message.push_str(&self.config.subject_separator);
-        self.message.push_str(format!(" {}", description).as_str());
+        self.message.push_str(description);
     }
 
     pub fn set_body(&mut self, body: &str) {

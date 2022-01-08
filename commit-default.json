@@ -1,6 +1,6 @@
 {
   "config": {
-    "subject_separator": ":",
+    "subject_separator": ": ",
     "scope_prefix": "(",
     "scope_suffix": ")"
   },
