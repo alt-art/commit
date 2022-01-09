@@ -2,22 +2,22 @@ mod commit_message;
 mod config;
 
 use anyhow::Result;
+use clap::Parser;
 use std::io::Write;
 use std::path::PathBuf;
 use std::process::Command;
-use structopt::{clap::AppSettings::ColoredHelp, StructOpt};
 
 use commit_message::make_message_commit;
 
-#[derive(StructOpt)]
-#[structopt(
-    name = "commit",
-    about = "A tool to make patterned (conventional) commit messages",
-    author = "Pedro H. M. <pedromendescraft@gmail.com>",
-    setting = ColoredHelp,
-)]
+#[derive(Parser)]
+#[clap(about, author, version)]
 struct Opt {
-    #[structopt(short, long, help = "Custom configuration file path")]
+    #[clap(
+        short,
+        long,
+        help = "Custom configuration file path",
+        parse(from_os_str)
+    )]
     config: Option<PathBuf>,
 }
 
@@ -28,7 +28,7 @@ fn main() -> Result<()> {
         std::env::set_current_dir(current_dir)?;
     }
 
-    let opt = Opt::from_args();
+    let opt = Opt::parse();
     let pattern = config::get_pattern(opt.config)?;
     let commit_message = make_message_commit(pattern)?;
 
