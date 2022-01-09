@@ -8,12 +8,23 @@ use message_build::MessageBuilder;
 use prompt::Prompt;
 
 pub fn make_message_commit(pattern: CommitPattern) -> Result<String> {
-    let mut message_inquirer = MessageInquirer::new(pattern);
-    message_inquirer.type_choice()?;
-    message_inquirer.scope_choice()?;
-    message_inquirer.description()?;
-    message_inquirer.body()?;
-    message_inquirer.footer()?;
+    let mut message_inquirer = MessageInquirer::new(pattern.clone());
+    let skip_commit = pattern.skip_commit;
+    if !skip_commit.contains(&"commit_type".to_string()) {
+        message_inquirer.type_choice()?;
+    }
+    if !skip_commit.contains(&"commit_scope".to_string()) {
+        message_inquirer.scope_choice()?;
+    }
+    if !skip_commit.contains(&"commit_description".to_string()) {
+        message_inquirer.description()?;
+    }
+    if !skip_commit.contains(&"commit_body".to_string()) {
+        message_inquirer.body()?;
+    }
+    if !skip_commit.contains(&"commit_footer".to_string()) {
+        message_inquirer.footer()?;
+    }
     message_inquirer.message()
 }
 

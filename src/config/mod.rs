@@ -30,7 +30,7 @@ pub struct Type {
     pub description: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub struct Messages {
     pub commit_type: String,
     pub commit_scope: String,
@@ -39,11 +39,13 @@ pub struct Messages {
     pub commit_footer: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub struct CommitPattern {
     pub config: Config,
     pub commit_types: Vec<Type>,
     pub commit_scopes: Vec<Type>,
+    #[serde(default)]
+    pub skip_commit: Vec<String>,
     pub msg: Messages,
 }
 
