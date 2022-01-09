@@ -60,6 +60,12 @@ fn select_custom_config_path(config: Option<PathBuf>) -> Result<PathBuf> {
     match config {
         Some(config_path) => {
             if config_path.exists() {
+                if !config_path.is_file() {
+                    return Err(anyhow!(
+                        "Config file path is not a file: {}",
+                        config_path.display()
+                    ));
+                }
                 Ok(config_path)
             } else {
                 Err(anyhow!(
@@ -75,7 +81,7 @@ fn select_custom_config_path(config: Option<PathBuf>) -> Result<PathBuf> {
 fn get_config_path() -> Result<PathBuf> {
     let current_dir = std::env::current_dir()?;
     let current_file = current_dir.join("commit.json");
-    if current_file.exists() {
+    if current_file.is_file() {
         Ok(current_file)
     } else {
         let config_file = dirs::config_dir()
