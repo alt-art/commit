@@ -17,9 +17,9 @@ I made this project for my own use, because I don't want to mess with the origin
 ## What I want to do
 
 - [x] Support for external config files
-- [x] Ability to override the questions with custom configuration
+- [x] [Ability to override the questions with custom configuration](https://github.com/alt-art/commit/wiki#using-custom-configuration-file)
 - [x] Ability to choose skip questions with custom configuration
-- [ ] Make a wiki page for custom conventional commit message
+- [x] [Make a wiki page for custom conventional commit message](https://github.com/alt-art/commit/wiki#using-custom-configuration-file)
 
 ## Download
 
