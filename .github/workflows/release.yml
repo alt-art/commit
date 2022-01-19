@@ -23,17 +23,15 @@ jobs:
     - name: Test
       run: cargo test --release
     - name: Build .deb
-      run: cargo deb --verbose 
+      run: cargo deb -v -o ./commit_${GITHUB_REF##*/}_amd64.deb
     - name: Upload .deb package
       run: |
-        cp ./target/debian/*.deb ./commit_${GITHUB_REF##*/}_amd64.deb
         ./.github/workflows/upload_asset.sh \
           "alt-art/commit" ./commit_${GITHUB_REF##*/}_amd64.deb $GITHUB_TOKEN
     - name: Build .rpm
-      run: cargo generate-rpm --verbose
+      run: cargo generate-rpm -o ./commit_${GITHUB_REF##*/}_x86_64.rpm
     - name: Upload .rpm package
       run: |
-        cp ./target/generate-rpm/rpm/*.rpm ./commit_${GITHUB_REF##*/}_x86_64.rpm
         ./.github/workflows/upload_asset.sh \
           "alt-art/commit" ./commit_${GITHUB_REF##*/}_x86_64.rpm $GITHUB_TOKEN
     - name: Build .AppImage
