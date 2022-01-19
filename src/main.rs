@@ -5,7 +5,7 @@ use anyhow::Result;
 use clap::Parser;
 use std::io::Write;
 use std::path::PathBuf;
-use std::process::Command;
+use std::process::{exit, Command};
 
 use commit_message::make_message_commit;
 
@@ -36,9 +36,18 @@ fn main() -> Result<()> {
         .arg("commit")
         .arg("-m")
         .arg(commit_message)
-        .output()
-        .expect("Failed to execute process");
-    std::io::stdout().write_all(&output.stdout).unwrap();
-    std::io::stderr().write_all(&output.stderr).unwrap();
-    std::process::exit(output.status.code().unwrap());
+        .output();
+    match output {
+        Ok(output) => {
+            std::io::stdout().write_all(&output.stdout).unwrap();
+            std::io::stderr().write_all(&output.stderr).unwrap();
+            exit(output.status.code().unwrap());
+        }
+        Err(e) => {
+            return Err(anyhow::anyhow!(
+                "Failed to run git. Make sure git is installed\nAdditional info: {}",
+                e
+            ));
+        }
+    };
 }
