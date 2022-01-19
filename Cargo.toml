@@ -28,6 +28,7 @@ maintainer = "Pedro Henrique Mendes <pedromendescraft@gmail.com>"
 copyright = "2020, Pedro Henrique Mendes <pedromendescraft@gmail.com>"
 license-file = ["LICENSE", "0"]
 extended-description = "A tool to make patterned (conventional) commit messages and customize the commit pattern"
+depends = "git"
 section = "utils"
 priority = "optional"
 assets = [
@@ -40,3 +41,6 @@ assets = [
   # Binary
   { source = "target/release/commit", dest = "/usr/bin/", mode = "111" },
 ]
+
+[package.metadata.generate-rpm.requires]
+git = "*"
