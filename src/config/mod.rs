@@ -9,6 +9,8 @@ use std::io::Read;
 use std::path::Path;
 use std::path::PathBuf;
 
+use crate::DEFAULT_CONFIG_FILE;
+
 #[derive(Deserialize, Clone)]
 pub struct Config {
     pub type_prefix: Option<String>,
@@ -92,7 +94,7 @@ fn get_config_path() -> Result<PathBuf> {
 }
 
 pub fn get_pattern(config_path: Option<PathBuf>) -> Result<CommitPattern> {
-    let default_pattern_str = include_str!("../../commit-default.json");
+    let default_pattern_str = DEFAULT_CONFIG_FILE;
     let selected_config_path = select_custom_config_path(config_path)?;
     let pattern_str = get_config_path_content(&selected_config_path)
         .unwrap_or_else(|_| default_pattern_str.to_string());
