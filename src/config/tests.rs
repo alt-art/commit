@@ -9,12 +9,10 @@ fn select_custom_config_path_test() -> Result<()> {
 
     let config_path = Some(config_file.path().to_owned());
     let selected_config_path = select_custom_config_path(config_path.clone())?;
-
     assert_eq!(config_path.unwrap().to_str(), selected_config_path.to_str());
 
     let config_path_default = dirs::config_dir().unwrap().join("commit/commit.json");
     let selected_config_path = select_custom_config_path(None)?;
-
     assert_eq!(selected_config_path.to_str(), config_path_default.to_str());
 
     let selected_config_path = select_custom_config_path(Some(PathBuf::new()));
@@ -24,20 +22,24 @@ fn select_custom_config_path_test() -> Result<()> {
     }
     Ok(())
 }
+
 #[test]
 fn get_config_path_test() -> Result<()> {
     let temp_dir = assert_fs::TempDir::new()?;
     let config_file = dirs::config_dir().unwrap().join("commit/commit.json");
     let config_path = get_config_path();
     assert_eq!(config_file.to_str(), config_path.unwrap().to_str());
+
     let last_current_dir = std::env::current_dir()?;
     std::env::set_current_dir(temp_dir.to_owned())?;
     let config_file = temp_dir.child("commit.json");
     config_file.touch()?;
     assert_eq!(config_file.to_str(), get_config_path()?.to_str());
+
     std::env::set_current_dir(last_current_dir)?;
     Ok(())
 }
+
 #[test]
 fn get_config_path_content_test() -> Result<()> {
     let temp_dir = assert_fs::TempDir::new()?;
@@ -46,12 +48,14 @@ fn get_config_path_content_test() -> Result<()> {
     let config_path = config_file.path();
     let content = get_config_path_content(config_path)?;
     assert_eq!(content, "");
+
     let expected = include_str!("../../commit-default.json");
     config_file.write_str(expected)?;
     let content = get_config_path_content(config_path)?;
     assert_eq!(content, expected);
     Ok(())
 }
+
 #[test]
 fn get_pattern_test() -> Result<()> {
     let pattern = get_pattern(None)?;

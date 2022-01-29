@@ -21,23 +21,29 @@ fn message_builder_config_test() -> Result<()> {
         type_prefix: None,
         type_suffix: None,
     };
+
     assert_eq!(
         message_with_config(config.clone()),
         "feat(test): description\n\nbody\n\nfooter"
     );
+
     config.type_prefix = Some("[".to_string());
     config.type_suffix = Some("]".to_string());
+
     assert_eq!(
         message_with_config(config.clone()),
         "[feat](test): description\n\nbody\n\nfooter"
     );
     config.subject_separator = " ".to_string();
+
     assert_eq!(
         message_with_config(config.clone()),
         "[feat](test) description\n\nbody\n\nfooter"
     );
+
     config.scope_prefix = "".to_string();
     config.scope_suffix = "".to_string();
+
     assert_eq!(
         message_with_config(config.clone()),
         "[feat]test description\n\nbody\n\nfooter"
@@ -55,14 +61,19 @@ fn message_builder_test() -> Result<()> {
         type_suffix: None,
     };
     let mut builder = MessageBuilder::new(config);
+
     builder.set_type("feat");
     assert_eq!(builder.message, "feat");
+
     builder.set_scope("test");
     assert_eq!(builder.message, "feat(test)");
+
     builder.set_description("description");
     assert_eq!(builder.message, "feat(test): description");
+
     builder.set_body("body");
     assert_eq!(builder.message, "feat(test): description\n\nbody");
+
     builder.set_footer("footer");
     assert_eq!(builder.message, "feat(test): description\n\nbody\n\nfooter");
     Ok(())
