@@ -25,18 +25,9 @@ fn select_custom_config_path_test() -> Result<()> {
 
 #[test]
 fn get_config_path_test() -> Result<()> {
-    let temp_dir = assert_fs::TempDir::new()?;
     let config_file = dirs::config_dir().unwrap().join("commit/commit.json");
     let config_path = get_config_path();
     assert_eq!(config_file.to_str(), config_path.unwrap().to_str());
-
-    let last_current_dir = std::env::current_dir()?;
-    std::env::set_current_dir(temp_dir.to_owned())?;
-    let config_file = temp_dir.child("commit.json");
-    config_file.touch()?;
-    assert_eq!(config_file.to_str(), get_config_path()?.to_str());
-
-    std::env::set_current_dir(last_current_dir)?;
     Ok(())
 }
 
