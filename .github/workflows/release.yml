@@ -21,7 +21,10 @@ jobs:
     - name: Install cargo-generate-rpm
       run: cargo install cargo-generate-rpm
     - name: Install cargo-appimage
-      run: cargo install cargo-appimage
+      run: |
+        cargo install cargo-appimage
+        sudo wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /usr/bin/appimagetool
+        sudo chmod +x /usr/bin/appimagetool
     - name: Test
       run: cargo test --release
     - name: Build .deb
