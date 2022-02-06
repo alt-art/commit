@@ -3,6 +3,7 @@ name: Release
 on:
   push:
     tags: ["[0-9]+.[0-9]+.[0-9]+*"]
+  workflow_dispatch:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -14,6 +15,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - uses: Swatinem/rust-cache@v1
     - name: Install cargo-deb
       run: cargo install cargo-deb
     - name: Install cargo-generate-rpm
@@ -26,18 +28,21 @@ jobs:
       run: cargo deb -v -o ./commit_${GITHUB_REF##*/}_amd64.deb
     - name: Upload .deb package
       run: |
+        chmod +x ./.github/workflows/upload_asset.sh
         ./.github/workflows/upload_asset.sh \
           "alt-art/commit" ./commit_${GITHUB_REF##*/}_amd64.deb $GITHUB_TOKEN
     - name: Build .rpm
       run: cargo generate-rpm -o ./commit_${GITHUB_REF##*/}_x86_64.rpm
     - name: Upload .rpm package
       run: |
+        chmod +x ./.github/workflows/upload_asset.sh
         ./.github/workflows/upload_asset.sh \
           "alt-art/commit" ./commit_${GITHUB_REF##*/}_x86_64.rpm $GITHUB_TOKEN
     - name: Build .AppImage
       run: cargo appimage --verbose
     - name: Upload .AppImage
       run: |
+        chmod +x ./.github/workflows/upload_asset.sh
         cp ./*.AppImage ./commit_${GITHUB_REF##*/}_x86_64.AppImage
         ./.github/workflows/upload_asset.sh \
           "alt-art/commit" ./commit_${GITHUB_REF##*/}_x86_64.AppImage $GITHUB_TOKEN
