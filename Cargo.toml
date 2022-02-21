@@ -39,7 +39,7 @@ assets = [
 [package.metadata.generate-rpm]
 assets = [
   # Binary
-  { source = "target/release/commit", dest = "/usr/bin/", mode = "111" },
+  { source = "target/release/commit", dest = "/usr/bin/commit", mode = "111" },
 ]
 
 [package.metadata.generate-rpm.requires]
