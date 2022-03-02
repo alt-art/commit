@@ -7,14 +7,15 @@
 )]
 #![allow(clippy::module_name_repetitions)]
 
+mod commit;
 mod commit_message;
 mod config;
 
 use anyhow::Result;
 use clap::Parser;
 use std::io::Write;
+
 use std::path::PathBuf;
-use std::process::{exit, Command};
 
 use commit_message::make_message_commit;
 
@@ -32,6 +33,8 @@ struct Opt {
     config: Option<PathBuf>,
     #[clap(long, help = "Init custom configuration file")]
     init: bool,
+    #[clap(short, long, help = "Use as hook")]
+    hook: bool,
 }
 
 fn main() -> Result<()> {
@@ -45,28 +48,17 @@ fn main() -> Result<()> {
     if opt.init {
         let mut file = std::fs::File::create("commit.json")?;
         file.write_all(DEFAULT_CONFIG_FILE.as_bytes())?;
-        Ok(())
-    } else {
-        let pattern = config::get_pattern(opt.config)?;
-        let commit_message = make_message_commit(pattern)?;
-
-        let output = Command::new("git")
-            .arg("commit")
-            .arg("-m")
-            .arg(commit_message)
-            .output();
-        match output {
-            Ok(output) => {
-                std::io::stdout().write_all(&output.stdout).unwrap();
-                std::io::stderr().write_all(&output.stderr).unwrap();
-                exit(output.status.code().unwrap());
-            }
-            Err(e) => {
-                return Err(anyhow::anyhow!(
-                    "Failed to run git. Make sure git is installed\nAdditional info: {}",
-                    e
-                ));
-            }
-        };
+        return Ok(());
     }
+
+    let pattern = config::get_pattern(opt.config)?;
+    let commit_message = make_message_commit(pattern)?;
+
+    if opt.hook {
+        commit::commit_as_hook(&commit_message)?;
+        return Ok(());
+    }
+
+    commit::commit(&commit_message)?;
+    Ok(())
 }
