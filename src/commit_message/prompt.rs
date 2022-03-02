@@ -13,11 +13,11 @@ pub struct Prompt {
 }
 
 impl Prompt {
-    pub fn new() -> Prompt {
+    pub fn new() -> Self {
         let default = RenderConfig::default();
         let prompt_prefix = Styled::new("-").with_fg(Color::LightGreen);
         let current_config = default.with_prompt_prefix(prompt_prefix);
-        Prompt {
+        Self {
             config: current_config,
         }
     }

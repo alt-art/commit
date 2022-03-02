@@ -9,8 +9,8 @@ pub struct MessageBuilder {
 }
 
 impl MessageBuilder {
-    pub fn new(config: Config) -> MessageBuilder {
-        MessageBuilder {
+    pub const fn new(config: Config) -> Self {
+        Self {
             config,
             message: String::new(),
         }

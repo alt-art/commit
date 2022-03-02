@@ -4,8 +4,7 @@ mod tests;
 use anyhow::{anyhow, Context, Result};
 use serde::Deserialize;
 use std::fmt::{Display, Formatter, Result as FmtResult};
-use std::fs::File;
-use std::io::Read;
+use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
 
@@ -52,9 +51,7 @@ pub struct CommitPattern {
 }
 
 fn get_config_path_content(config_path: impl AsRef<Path>) -> Result<String> {
-    let mut file = File::open(config_path)?;
-    let mut content = String::new();
-    file.read_to_string(&mut content)?;
+    let content = fs::read_to_string(config_path)?;
     Ok(content)
 }
 
@@ -97,6 +94,6 @@ pub fn get_pattern(config_path: Option<PathBuf>) -> Result<CommitPattern> {
     let default_pattern_str = DEFAULT_CONFIG_FILE;
     let selected_config_path = select_custom_config_path(config_path)?;
     let pattern_str = get_config_path_content(&selected_config_path)
-        .unwrap_or_else(|_| default_pattern_str.to_string());
+        .unwrap_or_else(|_| default_pattern_str.to_owned());
     serde_json::from_str(&pattern_str).context("Failed to parse commit pattern from file")
 }

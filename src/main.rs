@@ -1,3 +1,12 @@
+#![warn(
+    clippy::all,
+    clippy::pedantic,
+    clippy::nursery,
+    clippy::cargo,
+    clippy::str_to_string
+)]
+#![allow(clippy::module_name_repetitions)]
+
 mod commit_message;
 mod config;
 

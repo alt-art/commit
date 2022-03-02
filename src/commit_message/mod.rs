@@ -10,19 +10,19 @@ use prompt::Prompt;
 pub fn make_message_commit(pattern: CommitPattern) -> Result<String> {
     let mut message_inquirer = MessageInquirer::new(pattern.clone());
     let skip_commit = pattern.skip_commit;
-    if !skip_commit.contains(&"commit_type".to_string()) {
+    if !skip_commit.contains(&"commit_type".to_owned()) {
         message_inquirer.type_choice()?;
     }
-    if !skip_commit.contains(&"commit_scope".to_string()) {
+    if !skip_commit.contains(&"commit_scope".to_owned()) {
         message_inquirer.scope_choice()?;
     }
-    if !skip_commit.contains(&"commit_description".to_string()) {
+    if !skip_commit.contains(&"commit_description".to_owned()) {
         message_inquirer.description()?;
     }
-    if !skip_commit.contains(&"commit_body".to_string()) {
+    if !skip_commit.contains(&"commit_body".to_owned()) {
         message_inquirer.body()?;
     }
-    if !skip_commit.contains(&"commit_footer".to_string()) {
+    if !skip_commit.contains(&"commit_footer".to_owned()) {
         message_inquirer.footer()?;
     }
     message_inquirer.message()
@@ -36,7 +36,7 @@ struct MessageInquirer {
 
 impl MessageInquirer {
     fn new(pattern: CommitPattern) -> Self {
-        MessageInquirer {
+        Self {
             commit_builder: MessageBuilder::new(pattern.config.clone()),
             prompt: Prompt::new(),
             pattern,

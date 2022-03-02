@@ -18,16 +18,18 @@ fn select_custom_config_path_test() -> Result<()> {
     let selected_config_path = select_custom_config_path(Some(PathBuf::new()));
     match selected_config_path {
         Err(err) => assert_eq!(err.to_string(), "Config file does not exist: "),
-        _ => assert!(false),
+        _ => unreachable!(),
     }
     Ok(())
 }
 
 #[test]
 fn get_config_path_test() -> Result<()> {
-    let config_file = dirs::config_dir().unwrap().join("commit/commit.json");
+    let config_file = dirs::config_dir()
+        .ok_or(anyhow!("Could not find config directory"))?
+        .join("commit/commit.json");
     let config_path = get_config_path();
-    assert_eq!(config_file.to_str(), config_path.unwrap().to_str());
+    assert_eq!(config_file.to_str(), config_path?.to_str());
     Ok(())
 }
 
