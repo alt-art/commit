@@ -26,7 +26,7 @@ fn select_custom_config_path_test() -> Result<()> {
 #[test]
 fn get_config_path_test() -> Result<()> {
     let config_file = dirs::config_dir()
-        .ok_or(anyhow!("Could not find config directory"))?
+        .ok_or_else(|| anyhow!("Could not find config directory"))?
         .join("commit/commit.json");
     let config_path = get_config_path();
     assert_eq!(config_file.to_str(), config_path?.to_str());

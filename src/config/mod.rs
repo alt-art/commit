@@ -84,7 +84,7 @@ fn get_config_path() -> Result<PathBuf> {
         Ok(current_file)
     } else {
         let config_file = dirs::config_dir()
-            .ok_or(anyhow!("Could not find config directory"))?
+            .ok_or_else(|| anyhow!("Could not find config directory"))?
             .join("commit/commit.json");
         Ok(config_file)
     }

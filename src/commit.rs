@@ -42,7 +42,7 @@ pub fn commit(commit_message: &str) -> Result<()> {
                 output
                     .status
                     .code()
-                    .ok_or(anyhow!("Could not get exit code"))?,
+                    .ok_or_else(|| anyhow!("Could not get exit code"))?,
             );
         }
         Err(e) => {
