@@ -1,5 +1,10 @@
 # Commit
 
+<p>
+<img alt="Logo" src="icon.png" width="120" height="120"/>
+</p>
+
+
 See [wiki page](https://github.com/alt-art/commit/wiki) for usage and configuration.
 
 This command-line interface makes it possible to make patterned (conventional) commit messages to organize your repository.
