@@ -17,9 +17,4 @@ I made this project for my own use, because I don't want to mess with the origin
 
 ## Contributing
 
-    - Fork this project
-    - Clone the fork
-    - Make your changes
-    - Commit your changes
-    - Push your changes
-    - Open a pull request
+See [CONTRIBUTING.md](https://github.com/alt-art/commit/blob/main/CONTRIBUTING.md)
