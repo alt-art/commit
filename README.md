@@ -1,3 +1,7 @@
+<p align="center">
+<img alt="Logo" src="icon.png" width="120" height="120"/>
+</p>
+
 # Commit
 
 See [wiki page](https://github.com/alt-art/commit/wiki) for usage and configuration.
