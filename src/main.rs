@@ -11,13 +11,13 @@ mod commit;
 mod commit_message;
 mod config;
 
+use anyhow::anyhow;
 use anyhow::Result;
 use clap::Parser;
 use colored::Colorize;
 use std::io::Write;
 use std::path::PathBuf;
-use std::process::{Command};
-use anyhow::anyhow;
+use std::process::Command;
 
 use commit_message::make_message_commit;
 
@@ -47,13 +47,17 @@ fn main() -> Result<()> {
     }
 
     if let Some(0) = Command::new("git")
-            .args(["diff",  "--cached",  "--quiet"])
-            .output()
-            .expect("failed to execute process")
-            .status.code() {
-        return Err(anyhow!("{}", "You have not added anything please do `git add`".red()));
+        .args(["diff", "--cached", "--quiet"])
+        .output()
+        .expect("failed to execute process")
+        .status
+        .code()
+    {
+        return Err(anyhow!(
+            "{}",
+            "You have not added anything please do `git add`".red()
+        ));
     }
-
 
     let opt = Opt::parse();
     if opt.init {
