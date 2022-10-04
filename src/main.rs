@@ -13,10 +13,11 @@ mod config;
 
 use anyhow::Result;
 use clap::Parser;
-use std::io::Write;
 use colored::Colorize;
+use std::io::Write;
 use std::path::PathBuf;
-use std::process::{Command, exit};
+use std::process::{Command};
+use anyhow::anyhow;
 
 use commit_message::make_message_commit;
 
@@ -50,8 +51,7 @@ fn main() -> Result<()> {
             .output()
             .expect("failed to execute process")
             .status.code() {
-        eprintln!("{}", "# You have not added anything please do `git add`".red());
-        exit(1);
+        return Err(anyhow!("{}", "You have not added anything please do `git add`".red()));
     }
 
 
