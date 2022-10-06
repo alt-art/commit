@@ -11,11 +11,13 @@ mod commit;
 mod commit_message;
 mod config;
 
+use anyhow::anyhow;
 use anyhow::Result;
 use clap::Parser;
+use colored::Colorize;
 use std::io::Write;
-
 use std::path::PathBuf;
+use std::process::Command;
 
 use commit_message::make_message_commit;
 
@@ -42,6 +44,19 @@ fn main() -> Result<()> {
     // https://github.com/AppImage/AppImageKit/issues/172
     if let Ok(current_dir) = std::env::var("OWD") {
         std::env::set_current_dir(current_dir)?;
+    }
+
+    if Command::new("git")
+        .args(["diff", "--cached", "--quiet"])
+        .output()
+        .expect("failed to execute process")
+        .status
+        .code()
+        == Some(0)
+    {
+        return Err(anyhow!(
+            "You have not added anything please do `git add`".red()
+        ));
     }
 
     let opt = Opt::parse();
