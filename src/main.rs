@@ -46,12 +46,12 @@ fn main() -> Result<()> {
         std::env::set_current_dir(current_dir)?;
     }
 
-    if let Some(0) = Command::new("git")
+    if Command::new("git")
         .args(["diff", "--cached", "--quiet"])
         .output()
         .expect("failed to execute process")
         .status
-        .code()
+        .code() == Some(0)
     {
         return Err(anyhow!(
             "You have not added anything please do `git add`".red()
