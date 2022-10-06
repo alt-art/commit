@@ -51,7 +51,8 @@ fn main() -> Result<()> {
         .output()
         .expect("failed to execute process")
         .status
-        .code() == Some(0)
+        .code()
+        == Some(0)
     {
         return Err(anyhow!(
             "You have not added anything please do `git add`".red()
