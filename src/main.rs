@@ -54,7 +54,6 @@ fn main() -> Result<()> {
         .code()
     {
         return Err(anyhow!(
-            "{}",
             "You have not added anything please do `git add`".red()
         ));
     }
