@@ -38,3 +38,11 @@ pub fn commit(commit_message: &str) -> Result<()> {
             .ok_or_else(|| anyhow!("Signal terminated"))?,
     );
 }
+
+pub fn check_staged_files() -> Result<()> {
+    let output = git_exec(&["diff", "--cached", "--quiet"])?;
+    if output.status.code() == Some(0) {
+        return Err(anyhow!("You have not added anything please do `git add`"));
+    }
+    Ok(())
+}
