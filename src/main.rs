@@ -11,14 +11,12 @@ mod commit;
 mod commit_message;
 mod config;
 
-use anyhow::anyhow;
 use anyhow::Result;
 use clap::Parser;
-use colored::Colorize;
 use std::io::Write;
 use std::path::PathBuf;
-use std::process::Command;
 
+use commit::{check_staged_files, commit, commit_as_hook};
 use commit_message::make_message_commit;
 
 const DEFAULT_CONFIG_FILE: &str = include_str!("../commit-default.json");
@@ -46,18 +44,7 @@ fn main() -> Result<()> {
         std::env::set_current_dir(current_dir)?;
     }
 
-    if Command::new("git")
-        .args(["diff", "--cached", "--quiet"])
-        .output()
-        .expect("failed to execute process")
-        .status
-        .code()
-        == Some(0)
-    {
-        return Err(anyhow!(
-            "You have not added anything please do `git add`".red()
-        ));
-    }
+    check_staged_files()?;
 
     let opt = Opt::parse();
     if opt.init {
@@ -70,10 +57,10 @@ fn main() -> Result<()> {
     let commit_message = make_message_commit(pattern)?;
 
     if opt.hook {
-        commit::commit_as_hook(&commit_message)?;
+        commit_as_hook(&commit_message)?;
         return Ok(());
     }
 
-    commit::commit(&commit_message)?;
+    commit(&commit_message)?;
     Ok(())
 }
