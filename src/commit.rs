@@ -29,6 +29,9 @@ pub fn commit_as_hook(commit_message: &str) -> Result<()> {
 
 pub fn commit(commit_message: &str) -> Result<()> {
     let output = git_exec(&["commit", "-m", commit_message])?;
+    if commit_message.chars().count() == 0 {
+        return Err(anyhow!("You must enter a commit message to commit changes."));
+    } 
     std::io::stdout().write_all(&output.stdout)?;
     std::io::stderr().write_all(&output.stderr)?;
     exit(
