@@ -40,8 +40,8 @@ fn message_builder_config_test() {
         "[feat](test) description\n\nbody\n\nfooter"
     );
 
-    config.scope_prefix = "".to_owned();
-    config.scope_suffix = "".to_owned();
+    config.scope_prefix = String::new();
+    config.scope_suffix = String::new();
 
     assert_eq!(
         message_with_config(config),
