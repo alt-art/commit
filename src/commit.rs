@@ -16,15 +16,15 @@ pub fn git_exec(args: &[&str]) -> Result<Output> {
     }
 }
 
-pub fn commit_as_hook(commit_message: &str) -> Result<()> {
+pub fn get_git_path() -> Result<PathBuf> {
     let output = git_exec(&["rev-parse", "--absolute-git-dir"])?;
     if !output.status.success() {
-        return Err(anyhow!("Could not get git directory"));
+        return Err(anyhow!(
+            "Failed to get git path. Make sure you are in a git repository"
+        ));
     }
-    let git_dir = PathBuf::from(String::from_utf8_lossy(&output.stdout).trim());
-    let commit_file_path = git_dir.join("COMMIT_EDITMSG");
-    fs::write(commit_file_path, commit_message)?;
-    Ok(())
+    let path = String::from_utf8(output.stdout)?;
+    Ok(PathBuf::from(path.trim()))
 }
 
 pub fn commit(commit_message: &str) -> Result<()> {
@@ -44,5 +44,16 @@ pub fn check_staged_files() -> Result<()> {
     if output.status.code() == Some(0) {
         return Err(anyhow!("You have not added anything please do `git add`"));
     }
+    Ok(())
+}
+
+pub fn read_cached_commit() -> Result<String> {
+    let commit_file_path = get_git_path()?.join("COMMIT_EDITMSG");
+    let commit_message = fs::read_to_string(commit_file_path)?;
+    Ok(commit_message)
+}
+
+pub fn write_cached_commit(commit_message: &str) -> Result<()> {
+    fs::write(get_git_path()?.join("COMMIT_EDITMSG"), commit_message)?;
     Ok(())
 }
