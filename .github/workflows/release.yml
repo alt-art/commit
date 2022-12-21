@@ -20,11 +20,6 @@ jobs:
       run: cargo install cargo-deb
     - name: Install cargo-generate-rpm
       run: cargo install cargo-generate-rpm
-    - name: Install cargo-appimage
-      run: |
-        cargo install cargo-appimage
-        sudo wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /usr/bin/appimagetool
-        sudo chmod +x /usr/bin/appimagetool
     - name: Test
       run: cargo test --release
     - name: Build .deb
@@ -41,15 +36,6 @@ jobs:
         chmod +x ./.github/workflows/upload_asset.sh
         ./.github/workflows/upload_asset.sh \
           "alt-art/commit" ./commit_${GITHUB_REF##*/}_x86_64.rpm $GITHUB_TOKEN
-    - name: Build .AppImage
-      run: cargo appimage --verbose
-    - name: Upload .AppImage
-      run: |
-        chmod +x ./.github/workflows/upload_asset.sh
-        cp ./*.AppImage ./commit_${GITHUB_REF##*/}_x86_64.AppImage
-        ./.github/workflows/upload_asset.sh \
-          "alt-art/commit" ./commit_${GITHUB_REF##*/}_x86_64.AppImage $GITHUB_TOKEN
-
   windows:
     runs-on: windows-latest
 

@@ -39,12 +39,6 @@ struct Args {
 }
 
 fn main() -> Result<()> {
-    // Dumb hack to set the current/working directory (pwd) because appimage or cargo-appimage sucks
-    // https://github.com/AppImage/AppImageKit/issues/172
-    if let Ok(current_dir) = std::env::var("OWD") {
-        std::env::set_current_dir(current_dir)?;
-    }
-
     check_staged_files()?;
 
     let args = Args::parse();
