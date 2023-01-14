@@ -93,7 +93,7 @@ fn get_config_path() -> Result<PathBuf> {
 pub fn get_pattern(config_path: Option<PathBuf>) -> Result<CommitPattern> {
     let default_pattern_str = DEFAULT_CONFIG_FILE;
     let selected_config_path = select_custom_config_path(config_path)?;
-    let pattern_str = get_config_path_content(&selected_config_path)
+    let pattern_str = get_config_path_content(selected_config_path)
         .unwrap_or_else(|_| default_pattern_str.to_owned());
     serde_json::from_str(&pattern_str).context("Failed to parse commit pattern from file")
 }

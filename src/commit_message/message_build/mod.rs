@@ -38,10 +38,10 @@ impl MessageBuilder {
     }
 
     pub fn set_body(&mut self, body: &str) {
-        self.message.push_str(format!("\n\n{}", body).as_str());
+        self.message.push_str(format!("\n\n{body}").as_str());
     }
 
     pub fn set_footer(&mut self, footer: &str) {
-        self.message.push_str(format!("\n\n{}", footer).as_str());
+        self.message.push_str(format!("\n\n{footer}").as_str());
     }
 }
