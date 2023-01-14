@@ -25,7 +25,7 @@ impl Prompt {
     pub fn optional_input(&self, prompt: &str, label: &str) -> Result<String> {
         let input = Text::new(prompt)
             .with_render_config(self.config)
-            .with_help_message(format!("{}. Press Enter to skip", label).as_str())
+            .with_help_message(format!("{label}. Press Enter to skip").as_str())
             .prompt()?;
         Ok(input)
     }
@@ -33,7 +33,7 @@ impl Prompt {
     pub fn required_input(&self, prompt: &str, label: &str) -> Result<String> {
         let input = Text::new(prompt)
             .with_render_config(self.config)
-            .with_validator(required!(format!("{} can't be empty", label).as_str()))
+            .with_validator(required!(format!("{label} can't be empty").as_str()))
             .prompt()?;
         Ok(input)
     }
