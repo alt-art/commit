@@ -39,9 +39,9 @@ struct Args {
 }
 
 fn main() -> Result<()> {
-    check_staged_files()?;
-
     let args = Args::parse();
+
+    check_staged_files()?;
 
     if args.init {
         let mut file = std::fs::File::create("commit.json")?;
