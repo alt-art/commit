@@ -6,6 +6,8 @@
 
 See [wiki page](https://github.com/alt-art/commit/wiki) for usage and configuration.
 
+See [Installation guide](INSTALL.md) for installation.
+
 This command-line interface makes it possible to make patterned (conventional) commit messages to organize your repository.
 
 This project is a clone of [cz-cli](https://github.com/commitizen/cz-cli) with some minor changes.
