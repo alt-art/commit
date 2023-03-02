@@ -40,12 +40,12 @@ Requires rust and cargo
 
 ```bash
 git clone https://github/alt-art/commit
-cd commits
+cd commit
 cargo build --release
 ```
 
 ```bash
-cp target/release/commits /usr/local/bin
+cp target/release/commit /usr/local/bin
 ```
 
 ### Windows portable binary
