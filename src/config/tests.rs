@@ -1,3 +1,5 @@
+use std::env::{current_dir, set_current_dir};
+
 use super::*;
 use assert_fs::prelude::*;
 
@@ -11,6 +13,8 @@ fn select_custom_config_path_test() -> Result<()> {
     let selected_config_path = select_custom_config_path(config_path.clone())?;
     assert_eq!(config_path.unwrap().to_str(), selected_config_path.to_str());
 
+    let last_dir = current_dir()?;
+    set_current_dir(temp_dir.path())?;
     let config_path_default = dirs::config_dir().unwrap().join("commit/commit.json");
     let selected_config_path = select_custom_config_path(None)?;
     assert_eq!(selected_config_path.to_str(), config_path_default.to_str());
@@ -20,16 +24,23 @@ fn select_custom_config_path_test() -> Result<()> {
         Err(err) => assert_eq!(err.to_string(), "Config file does not exist: "),
         _ => unreachable!(),
     }
+    set_current_dir(last_dir)?;
+    temp_dir.close()?;
     Ok(())
 }
 
 #[test]
 fn get_config_path_test() -> Result<()> {
+    let temp_dir = assert_fs::TempDir::new()?;
+    let last_dir = current_dir()?;
+    set_current_dir(temp_dir.path())?;
     let config_file = dirs::config_dir()
         .ok_or_else(|| anyhow!("Could not find config directory"))?
         .join("commit/commit.json");
     let config_path = get_config_path();
     assert_eq!(config_file.to_str(), config_path?.to_str());
+    set_current_dir(last_dir)?;
+    temp_dir.close()?;
     Ok(())
 }
 
@@ -46,16 +57,22 @@ fn get_config_path_content_test() -> Result<()> {
     config_file.write_str(expected)?;
     let content = get_config_path_content(config_path)?;
     assert_eq!(content, expected);
+    temp_dir.close()?;
     Ok(())
 }
 
 #[test]
 fn get_pattern_test() -> Result<()> {
+    let temp_dir = assert_fs::TempDir::new()?;
+    let last_dir = current_dir()?;
+    set_current_dir(temp_dir.path())?;
     let pattern = get_pattern(None)?;
     assert_eq!(pattern.config.type_prefix, None);
     assert_eq!(pattern.config.type_suffix, None);
     assert_eq!(pattern.config.subject_separator, ": ");
     assert_eq!(pattern.config.scope_prefix, "(");
     assert_eq!(pattern.config.scope_suffix, ")");
+    set_current_dir(last_dir)?;
+    temp_dir.close()?;
     Ok(())
 }

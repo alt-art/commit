@@ -17,6 +17,7 @@ pub struct Config {
     pub subject_separator: String,
     pub scope_prefix: String,
     pub scope_suffix: String,
+    pub pre_commit: Option<String>,
 }
 
 impl Display for Type {
