@@ -23,17 +23,20 @@ fn select_custom_config_path_test() -> Result<()> {
         Err(err) => assert_eq!(err.to_string(), "Config file does not exist: "),
         _ => unreachable!(),
     }
+    temp_dir.close()?;
     Ok(())
 }
 
 #[test]
 fn get_config_path_test() -> Result<()> {
-    set_current_dir("/tmp")?;
+    let temp_dir = assert_fs::TempDir::new()?;
+    set_current_dir(temp_dir.path())?;
     let config_file = dirs::config_dir()
         .ok_or_else(|| anyhow!("Could not find config directory"))?
         .join("commit/commit.json");
     let config_path = get_config_path();
     assert_eq!(config_file.to_str(), config_path?.to_str());
+    temp_dir.close()?;
     Ok(())
 }
 
@@ -50,16 +53,20 @@ fn get_config_path_content_test() -> Result<()> {
     config_file.write_str(expected)?;
     let content = get_config_path_content(config_path)?;
     assert_eq!(content, expected);
+    temp_dir.close()?;
     Ok(())
 }
 
 #[test]
 fn get_pattern_test() -> Result<()> {
+    let temp_dir = assert_fs::TempDir::new()?;
+    set_current_dir(temp_dir.path())?;
     let pattern = get_pattern(None)?;
     assert_eq!(pattern.config.type_prefix, None);
     assert_eq!(pattern.config.type_suffix, None);
     assert_eq!(pattern.config.subject_separator, ": ");
     assert_eq!(pattern.config.scope_prefix, "(");
     assert_eq!(pattern.config.scope_suffix, ")");
+    temp_dir.close()?;
     Ok(())
 }
