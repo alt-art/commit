@@ -57,3 +57,21 @@ pub fn write_cached_commit(commit_message: &str) -> Result<()> {
     fs::write(get_git_path()?.join("COMMIT_EDITMSG"), commit_message)?;
     Ok(())
 }
+
+pub fn pre_commit_check(pre_commit_command: Option<String>, message: &str) -> Result<()> {
+    if let Some(command) = pre_commit_command {
+        println!("Running pre-commit command...");
+        let output = Command::new(command).env("MSG", message).output()?;
+        let message = String::from_utf8_lossy(&output.stdout);
+        println!("{message}");
+        if !output.status.success() {
+            let error_message = String::from_utf8_lossy(&output.stderr);
+            return Err(anyhow!(
+                "Pre-commit command failed with code: {}\n{}",
+                output.status.code().unwrap_or_default(),
+                error_message
+            ));
+        }
+    }
+    Ok(())
+}

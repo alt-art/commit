@@ -1,0 +1,44 @@
+{
+  "config": {
+    "subject_separator": ": ",
+    "scope_prefix": "(",
+    "scope_suffix": ")",
+    "pre_commit": "./pre-commit.sh"
+  },
+  "commit_types": [
+    { "name": "feat", "description": "A new feature" },
+    { "name": "fix", "description": "A bug fix" },
+    { "name": "docs", "description": "Documentation only changes" },
+    {
+      "name": "style",
+      "description": "Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)"
+    },
+    {
+      "name": "refactor",
+      "description": "A code change that neither fixes a bug nor adds a feature"
+    },
+    {
+      "name": "perf",
+      "description": "A code change that improves performance"
+    },
+    {
+      "name": "test",
+      "description": "Adding missing tests or correcting existing tests"
+    },
+    {
+      "name": "chore",
+      "description": "Other changes that don't modify src or test files"
+    }
+  ],
+  "commit_scopes": [
+    { "name": "custom", "description": "Custom scope" },
+    { "name": "none", "description": "No scope" }
+  ],
+  "msg": {
+    "commit_type": "What type of commit you will made?",
+    "commit_scope": "What scope of commit you will made? (Optional)",
+    "commit_description": "Write a SHORT, IMPERATIVE tense description of the change:",
+    "commit_body": "Provide a LONGER description of the change (Optional):",
+    "commit_footer": "List any ISSUES CLOSED by this change E.g.: #31, #34 (Optional):"
+  }
+}

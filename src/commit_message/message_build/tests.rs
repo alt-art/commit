@@ -19,6 +19,7 @@ fn message_builder_config_test() {
         subject_separator: ": ".to_owned(),
         type_prefix: None,
         type_suffix: None,
+        pre_commit: None,
     };
 
     assert_eq!(
@@ -57,6 +58,7 @@ fn message_builder_test() {
         subject_separator: ": ".to_owned(),
         type_prefix: None,
         type_suffix: None,
+        pre_commit: None,
     };
     let mut builder = MessageBuilder::new(config);
 

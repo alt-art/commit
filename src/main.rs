@@ -16,7 +16,9 @@ use clap::Parser;
 use std::io::Write;
 use std::path::PathBuf;
 
-use commit::{check_staged_files, commit, read_cached_commit, write_cached_commit};
+use commit::{
+    check_staged_files, commit, pre_commit_check, read_cached_commit, write_cached_commit,
+};
 use commit_message::make_message_commit;
 
 const DEFAULT_CONFIG_FILE: &str = include_str!("../commit-default.json");
@@ -56,8 +58,11 @@ fn main() -> Result<()> {
     }
 
     let pattern = config::get_pattern(args.config)?;
-    let commit_message = make_message_commit(pattern)?;
+
+    let commit_message = make_message_commit(pattern.clone())?;
     write_cached_commit(&commit_message)?;
+
+    pre_commit_check(pattern.config.pre_commit, &commit_message)?;
 
     if args.hook {
         return Ok(());
