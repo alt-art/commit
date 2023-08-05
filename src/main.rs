@@ -51,13 +51,14 @@ fn main() -> Result<()> {
         return Ok(());
     }
 
+    let pattern = config::get_pattern(args.config)?;
+
     if args.retry {
         let commit_message = read_cached_commit()?;
+        pre_commit_check(pattern.config.pre_commit, &commit_message)?;
         commit(&commit_message)?;
         return Ok(());
     }
-
-    let pattern = config::get_pattern(args.config)?;
 
     let commit_message = make_message_commit(pattern.clone())?;
     write_cached_commit(&commit_message)?;
