@@ -1,9 +1,9 @@
 use anyhow::{anyhow, Result};
 
-use std::fs;
-use std::io::Write;
+use std::io::{BufRead, BufReader, Write};
 use std::path::PathBuf;
-use std::process::{exit, Command, Output};
+use std::process::{exit, Command, Output, Stdio};
+use std::{fs, thread};
 
 pub fn git_exec(args: &[&str]) -> Result<Output> {
     let output = Command::new("git").args(args).output();
@@ -61,16 +61,28 @@ pub fn write_cached_commit(commit_message: &str) -> Result<()> {
 pub fn pre_commit_check(pre_commit_command: Option<String>, message: &str) -> Result<()> {
     if let Some(command) = pre_commit_command {
         println!("Running pre-commit command...");
-        let output = Command::new(command).env("MSG", message).output()?;
-        let message = String::from_utf8_lossy(&output.stdout);
-        println!("{message}");
-        if !output.status.success() {
-            let error_message = String::from_utf8_lossy(&output.stderr);
-            return Err(anyhow!(
-                "Pre-commit command failed with code: {}\n{}",
-                output.status.code().unwrap_or_default(),
-                error_message
-            ));
+        let mut process = Command::new(command)
+            .env("MSG", message)
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()?;
+        let stdout = process.stdout.take().expect("Unable to get stdout");
+        let stderr = process.stderr.take().expect("Unable to get stderr");
+        thread::spawn(move || {
+            let lines = BufReader::new(stdout).lines();
+            for line in lines {
+                println!("{}", line.expect("Unable to get line"));
+            }
+        });
+        thread::spawn(move || {
+            let lines = BufReader::new(stderr).lines();
+            for line in lines {
+                eprintln!("{}", line.expect("Unable to get line"));
+            }
+        });
+        let status = process.wait()?;
+        if !status.success() {
+            return Err(anyhow!("Pre-commit command failed with {}", status));
         }
     }
     Ok(())
