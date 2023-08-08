@@ -22,7 +22,7 @@ pub fn make_message_commit(pattern: CommitPattern) -> Result<String> {
     if !skip_commit.contains(&"commit_body".to_owned()) {
         message_inquirer.body()?;
     }
-    if !skip_commit.contains(&"commit_footer".to_owned()) {
+    if !skip_commit.contains(&"commit_footer".to_string()) {
         message_inquirer.footer()?;
     }
     message_inquirer.message()
