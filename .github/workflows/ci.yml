@@ -11,11 +11,6 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
-          override: true
       - uses: Swatinem/rust-cache@v2
       - name: Run tests
         run: cargo test --verbose
@@ -23,12 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
-          components: clippy, rustfmt
-          override: true
+      - run: rustup component add clippy
       - uses: Swatinem/rust-cache@v2
       - uses: actions-rs/clippy-check@v1
         with:
