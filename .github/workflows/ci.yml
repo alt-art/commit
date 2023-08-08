@@ -15,7 +15,6 @@ jobs:
         with:
           toolchain: stable
           profile: minimal
-          components: clippy
           override: true
       - uses: Swatinem/rust-cache@v2
       - name: Run tests
