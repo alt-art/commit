@@ -9,9 +9,9 @@ fn select_custom_config_path_test() -> Result<()> {
     let config_file = temp_dir.child("config.json");
     config_file.touch()?;
 
-    let config_path = Some(config_file.path().to_owned());
-    let selected_config_path = select_custom_config_path(config_path.clone())?;
-    assert_eq!(config_path.unwrap().to_str(), selected_config_path.to_str());
+    let config_path = config_file.path().to_owned();
+    let selected_config_path = select_custom_config_path(Some(config_path.clone()))?;
+    assert_eq!(config_path.to_str(), selected_config_path.to_str());
 
     set_current_dir(temp_dir.path())?;
     let config_path_default = dirs::config_dir().unwrap().join("commit/commit.json");
