@@ -17,7 +17,7 @@ license = "MIT"
 inquire = "0.6.2"
 serde = { version = "1.0.188", features = ["derive"] }
 serde_json = "1.0.105"
-clap = { version = "4.4.1", features = ["derive"] }
+clap = { version = "4.4.2", features = ["derive"] }
 dirs = "5.0.1"
 anyhow = "1.0.75"
 
