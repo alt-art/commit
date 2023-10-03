@@ -56,11 +56,11 @@ cp target/release/commit /usr/local/bin
 
 ```shell
 mkdir "C:\Program Files\commits"
-copy commit.exe "C:\Program Files\commits"
+copy commit.exe "C:\Program Files\commit"
 ```
 
 #### Add program to PATH on windows
 
 ```shell
-setx /M PATH "%PATH%;C:\Program Files\commits"
+setx /M PATH "%PATH%;C:\Program Files\commit"
 ```
