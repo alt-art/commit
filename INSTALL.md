@@ -39,7 +39,7 @@ dnf install ./commit_0.6.0_x86_64.rpm
 Requires rust and cargo
 
 ```bash
-git https://github.com/alt-art/commit.git
+git clone https://github.com/alt-art/commit.git
 cd commit
 cargo build --release
 ```
