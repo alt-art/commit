@@ -87,3 +87,10 @@ pub fn pre_commit_check(pre_commit_command: Option<String>, message: &str) -> Re
     }
     Ok(())
 }
+
+pub fn git_add_all_modified() -> Result<()> {
+    let output = git_exec(&["add", "-u"])?;
+    std::io::stdout().write_all(&output.stdout)?;
+    std::io::stderr().write_all(&output.stderr)?;
+    Ok(())
+}
