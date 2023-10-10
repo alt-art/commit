@@ -92,5 +92,12 @@ pub fn git_add_all_modified() -> Result<()> {
     let output = git_exec(&["add", "-u"])?;
     std::io::stdout().write_all(&output.stdout)?;
     std::io::stderr().write_all(&output.stderr)?;
+
+    if !output.status.success() {
+        return Err(anyhow!(
+            "Failed to get git path. Make sure you are in a git repository"
+        ));
+    }
+
     Ok(())
 }
