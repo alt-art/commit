@@ -5,7 +5,11 @@
     clippy::cargo,
     clippy::str_to_string
 )]
-#![allow(clippy::module_name_repetitions, clippy::multiple_crate_versions)]
+#![allow(
+    clippy::module_name_repetitions,
+    clippy::multiple_crate_versions,
+    clippy::struct_excessive_bools
+)]
 
 mod commit;
 mod commit_message;
@@ -24,7 +28,6 @@ use commit_message::make_message_commit;
 
 const DEFAULT_CONFIG_FILE: &str = include_str!("../commit-default.json");
 
-#[allow(clippy::pedantic)]
 #[derive(Parser, Debug)]
 #[command(about, author, version)]
 struct Args {
