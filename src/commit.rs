@@ -94,9 +94,7 @@ pub fn git_add_all_modified() -> Result<()> {
     std::io::stderr().write_all(&output.stderr)?;
 
     if !output.status.success() {
-        return Err(anyhow!(
-            "Failed to get git path. Make sure you are in a git repository"
-        ));
+        return Err(anyhow!("Could not add files to staged area"));
     }
 
     Ok(())
