@@ -5,7 +5,11 @@
     clippy::cargo,
     clippy::str_to_string
 )]
-#![allow(clippy::module_name_repetitions, clippy::multiple_crate_versions)]
+#![allow(
+    clippy::module_name_repetitions,
+    clippy::multiple_crate_versions,
+    clippy::struct_excessive_bools
+)]
 
 mod commit;
 mod commit_message;
@@ -17,7 +21,8 @@ use std::io::Write;
 use std::path::PathBuf;
 
 use commit::{
-    check_staged_files, commit, pre_commit_check, read_cached_commit, write_cached_commit,
+    check_staged_files, commit, git_add_all_modified, pre_commit_check, read_cached_commit,
+    write_cached_commit,
 };
 use commit_message::make_message_commit;
 
@@ -38,10 +43,17 @@ struct Args {
     /// Retry commit with the same message as the last one
     #[arg(short, long)]
     retry: bool,
+    /// Add all modified files into staging
+    #[arg(short, long)]
+    all: bool,
 }
 
 fn main() -> Result<()> {
     let args = Args::parse();
+
+    if args.all {
+        git_add_all_modified()?;
+    }
 
     check_staged_files()?;
 
