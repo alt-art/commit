@@ -10,7 +10,7 @@ See [Installation guide](INSTALL.md) for installation.
 
 This command-line interface makes it possible to make patterned (conventional) commit messages to organize your repository.
 
-This project is a clone of [cz-cli](https://github.com/commitizen/cz-cli) with some minor changes.
+This project is based on [cz-cli](https://github.com/commitizen/cz-cli) but do everything best than the original.
 
 I made this project for my own use, because I don't want to mess with the original cz-cli.
 
