@@ -53,7 +53,7 @@ fn get_config_path_content_test() -> Result<()> {
     let content = get_config_path_content(config_path)?;
     assert_eq!(content, "");
 
-    let expected = include_str!("../../commit-default.json");
+    let expected = include_str!("../../commit.json");
     config_file.write_str(expected)?;
     let content = get_config_path_content(config_path)?;
     assert_eq!(content, expected);

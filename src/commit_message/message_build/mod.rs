@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests;
 
-use crate::config::Config;
+use crate::commit_pattern::Config;
 
 pub struct MessageBuilder {
     config: Config,

@@ -2,54 +2,11 @@
 mod tests;
 
 use anyhow::{anyhow, Context, Result};
-use serde::Deserialize;
-use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
 
-use crate::DEFAULT_CONFIG_FILE;
-
-#[derive(Deserialize, Clone)]
-pub struct Config {
-    pub type_prefix: Option<String>,
-    pub type_suffix: Option<String>,
-    pub subject_separator: String,
-    pub scope_prefix: String,
-    pub scope_suffix: String,
-    pub pre_commit: Option<String>,
-}
-
-impl Display for Type {
-    fn fmt(&self, formatter: &mut Formatter) -> FmtResult {
-        write!(formatter, "{} - {}", self.name, self.description)
-    }
-}
-
-#[derive(Clone, Deserialize)]
-pub struct Type {
-    pub name: String,
-    pub description: String,
-}
-
-#[derive(Deserialize, Clone)]
-pub struct Messages {
-    pub commit_type: String,
-    pub commit_scope: String,
-    pub commit_description: String,
-    pub commit_body: String,
-    pub commit_footer: String,
-}
-
-#[derive(Deserialize, Clone)]
-pub struct CommitPattern {
-    pub config: Config,
-    pub commit_types: Vec<Type>,
-    pub commit_scopes: Vec<Type>,
-    #[serde(default)]
-    pub skip_commit: Vec<String>,
-    pub msg: Messages,
-}
+use crate::commit_pattern::CommitPattern;
 
 fn get_config_path_content(config_path: impl AsRef<Path>) -> Result<String> {
     let content = fs::read_to_string(config_path)?;
@@ -92,9 +49,8 @@ fn get_config_path() -> Result<PathBuf> {
 }
 
 pub fn get_pattern(config_path: Option<PathBuf>) -> Result<CommitPattern> {
-    let default_pattern_str = DEFAULT_CONFIG_FILE;
     let selected_config_path = select_custom_config_path(config_path)?;
-    let pattern_str = get_config_path_content(selected_config_path)
-        .unwrap_or_else(|_| default_pattern_str.to_owned());
+    let pattern_str =
+        get_config_path_content(selected_config_path).unwrap_or_else(|_| "{}".to_owned());
     serde_json::from_str(&pattern_str).context("Failed to parse commit pattern from file")
 }
