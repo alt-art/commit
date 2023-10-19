@@ -13,11 +13,11 @@
 
 mod commit;
 mod commit_message;
+mod commit_pattern;
 mod config;
 
 use anyhow::Result;
 use clap::Parser;
-use std::io::Write;
 use std::path::PathBuf;
 
 use commit::{
@@ -26,17 +26,12 @@ use commit::{
 };
 use commit_message::make_message_commit;
 
-const DEFAULT_CONFIG_FILE: &str = include_str!("../commit-default.json");
-
 #[derive(Parser, Debug)]
 #[command(about, author, version)]
 struct Args {
     /// Custom configuration file path
     #[arg(short, long)]
     config: Option<PathBuf>,
-    /// Init custom configuration file
-    #[arg(long)]
-    init: bool,
     /// Use as hook
     #[arg(long)]
     hook: bool,
@@ -56,12 +51,6 @@ fn main() -> Result<()> {
     }
 
     check_staged_files()?;
-
-    if args.init {
-        let mut file = std::fs::File::create("commit.json")?;
-        file.write_all(DEFAULT_CONFIG_FILE.as_bytes())?;
-        return Ok(());
-    }
 
     let pattern = config::get_pattern(args.config)?;
 

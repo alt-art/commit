@@ -2,10 +2,10 @@ mod message_build;
 mod prompt;
 
 use anyhow::{anyhow, Result};
-
-use crate::config::CommitPattern;
 use message_build::MessageBuilder;
 use prompt::Prompt;
+
+use crate::commit_pattern::CommitPattern;
 
 pub fn make_message_commit(pattern: CommitPattern) -> Result<String> {
     let mut message_inquirer = MessageInquirer::new(pattern.clone());

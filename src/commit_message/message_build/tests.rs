@@ -1,5 +1,5 @@
 use crate::commit_message::message_build::MessageBuilder;
-use crate::config::Config;
+use crate::commit_pattern::Config;
 
 fn message_with_config(config: Config) -> String {
     let mut builder = MessageBuilder::new(config);

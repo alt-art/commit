@@ -1,4 +1,4 @@
-use crate::config::Type;
+use crate::commit_pattern::Type;
 
 use inquire::{
     required,
