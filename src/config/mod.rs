@@ -2,16 +2,10 @@
 mod tests;
 
 use anyhow::{anyhow, Context, Result};
-use std::fs;
-use std::path::Path;
+use std::fs::File;
 use std::path::PathBuf;
 
 use crate::commit_pattern::CommitPattern;
-
-fn get_config_path_content(config_path: impl AsRef<Path>) -> Result<String> {
-    let content = fs::read_to_string(config_path)?;
-    Ok(content)
-}
 
 fn select_custom_config_path(config: Option<PathBuf>) -> Result<PathBuf> {
     match config {
@@ -62,7 +56,17 @@ fn get_config_path() -> Result<PathBuf> {
 
 pub fn get_pattern(config_path: Option<PathBuf>) -> Result<CommitPattern> {
     let selected_config_path = select_custom_config_path(config_path)?;
-    let pattern_str =
-        get_config_path_content(selected_config_path).unwrap_or_else(|_| "{}".to_owned());
-    serde_json::from_str(&pattern_str).context("Failed to parse commit pattern from file")
+    if selected_config_path.exists() {
+        let file = File::open(&selected_config_path).context(format!(
+            "Could not open config file: {}",
+            selected_config_path.display()
+        ))?;
+        let reader = std::io::BufReader::new(file);
+        Ok(serde_json::from_reader(reader).context(format!(
+            "Could not parse config file: {}",
+            selected_config_path.display()
+        ))?)
+    } else {
+        Ok(CommitPattern::default())
+    }
 }

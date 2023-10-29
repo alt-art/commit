@@ -83,3 +83,15 @@ impl CommitPattern {
         ]
     }
 }
+
+impl Default for CommitPattern {
+    fn default() -> Self {
+        Self {
+            config: Config::default(),
+            commit_types: Self::commit_types(),
+            commit_scopes: Self::commit_scopes(),
+            skip_commit: vec![],
+            msg: Messages::default(),
+        }
+    }
+}
