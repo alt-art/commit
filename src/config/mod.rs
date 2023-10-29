@@ -35,17 +35,29 @@ fn select_custom_config_path(config: Option<PathBuf>) -> Result<PathBuf> {
     }
 }
 
-fn get_config_path() -> Result<PathBuf> {
+fn search_config_file_on_parents() -> Result<Option<PathBuf>> {
     let current_dir = std::env::current_dir()?;
-    let current_file = current_dir.join("commit.json");
-    if current_file.is_file() {
-        Ok(current_file)
-    } else {
-        let config_file = dirs::config_dir()
-            .ok_or_else(|| anyhow!("Could not find config directory"))?
-            .join("commit/commit.json");
-        Ok(config_file)
+    let mut current_dir = current_dir.as_path();
+    loop {
+        let config_file = current_dir.join("commit.json");
+        if config_file.is_file() {
+            return Ok(Some(config_file));
+        }
+        if let Some(parent) = current_dir.parent() {
+            current_dir = parent;
+        } else {
+            break;
+        }
     }
+    Ok(None)
+}
+
+fn get_config_path() -> Result<PathBuf> {
+    Ok(search_config_file_on_parents()?.unwrap_or_else(|| {
+        dirs::config_dir()
+            .expect("Could not find config directory")
+            .join("commit/commit.json")
+    }))
 }
 
 pub fn get_pattern(config_path: Option<PathBuf>) -> Result<CommitPattern> {
