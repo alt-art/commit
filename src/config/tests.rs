@@ -1,4 +1,4 @@
-use std::env::set_current_dir;
+use std::{env::set_current_dir, fs::remove_file};
 
 use super::*;
 use assert_fs::prelude::*;
@@ -32,7 +32,15 @@ fn select_custom_config_path_test() -> Result<()> {
 #[serial]
 fn get_config_path_test() -> Result<()> {
     let temp_dir = assert_fs::TempDir::new()?;
-    set_current_dir(temp_dir.path())?;
+    temp_dir.child("commit.json").touch()?;
+    temp_dir.child("some/sub/dir").create_dir_all()?;
+    set_current_dir(temp_dir.path().join("some/sub/dir"))?;
+    let config_path = get_config_path()?;
+    assert_eq!(
+        config_path.to_str(),
+        temp_dir.path().join("commit.json").to_str()
+    );
+    remove_file(temp_dir.path().join("commit.json"))?;
     let config_file = dirs::config_dir()
         .ok_or_else(|| anyhow!("Could not find config directory"))?
         .join("commit/commit.json");
