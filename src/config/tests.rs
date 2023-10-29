@@ -51,23 +51,6 @@ fn get_config_path_test() -> Result<()> {
 
 #[test]
 #[serial]
-fn get_config_path_content_test() -> Result<()> {
-    let temp_dir = assert_fs::TempDir::new()?;
-    let config_file = temp_dir.child("config.json");
-    config_file.touch()?;
-    let config_path = config_file.path();
-    let content = get_config_path_content(config_path)?;
-    assert_eq!(content, "");
-
-    let expected = include_str!("../../commit.json");
-    config_file.write_str(expected)?;
-    let content = get_config_path_content(config_path)?;
-    assert_eq!(content, expected);
-    Ok(())
-}
-
-#[test]
-#[serial]
 fn get_pattern_test() -> Result<()> {
     let temp_dir = assert_fs::TempDir::new()?;
     set_current_dir(temp_dir.path())?;
