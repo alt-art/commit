@@ -21,8 +21,8 @@ yay -S commits
 > Verify what is the latest release [here](https://github.com/alt-art/commit/releases)
 
 ```bash
-wget https://github.com/alt-art/commit/releases/download/0.6.0/commit_0.6.0_amd64.deb
-apt install ./commit_0.6.0_amd64.deb
+wget https://github.com/alt-art/commit/releases/download/0.7.0/commit_0.7.0_amd64.deb
+apt install ./commit_0.7.0_amd64.deb
 ```
 
 ### Fedora
@@ -30,8 +30,8 @@ apt install ./commit_0.6.0_amd64.deb
 > Verify what is the latest release [here](https://github.com/alt-art/commit/releases)
 
 ```bash
-wget https://github.com/alt-art/commit/releases/download/0.6.0/commit_0.6.0_x86_64.rpm
-dnf install ./commit_0.6.0_x86_64.rpm
+wget https://github.com/alt-art/commit/releases/download/0.7.0/commit_0.7.0_x86_64.rpm
+dnf install ./commit_0.7.0_x86_64.rpm
 ```
 
 ### Install from source

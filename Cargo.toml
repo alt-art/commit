@@ -1,6 +1,6 @@
 [package]
 name = "commit"
-version = "0.6.0"
+version = "0.7.0"
 edition = "2021"
 homepage = "https://github.com/alt-art/commit"
 repository = "https://github.com/alt-art/commit"
@@ -15,9 +15,9 @@ license = "MIT"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
 inquire = "0.6.2"
-serde = { version = "1.0.190", features = ["derive"] }
+serde = { version = "1.0.192", features = ["derive"] }
 serde_json = "1.0.108"
-clap = { version = "4.4.6", features = ["derive"] }
+clap = { version = "4.4.8", features = ["derive"] }
 dirs = "5.0.1"
 anyhow = "1.0.75"
 
