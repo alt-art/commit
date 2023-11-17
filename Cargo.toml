@@ -12,6 +12,11 @@ authors = ["Pedro H. M. <pedromendescraft@gmail.com>"]
 readme = "README.md"
 license = "MIT"
 
+[lints.clippy]
+all = "warn"
+str_to_string = "warn"
+module_name_repetitions = "allow"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
 inquire = "0.6.2"

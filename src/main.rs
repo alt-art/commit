@@ -1,16 +1,3 @@
-#![warn(
-    clippy::all,
-    clippy::pedantic,
-    clippy::nursery,
-    clippy::cargo,
-    clippy::str_to_string
-)]
-#![allow(
-    clippy::module_name_repetitions,
-    clippy::multiple_crate_versions,
-    clippy::struct_excessive_bools
-)]
-
 mod commit;
 mod commit_message;
 mod commit_pattern;
