@@ -14,6 +14,9 @@ license = "MIT"
 
 [lints.clippy]
 all = "warn"
+pedantic = "warn"
+nursery = "warn"
+cargo = "warn"
 str_to_string = "warn"
 module_name_repetitions = "allow"
 
