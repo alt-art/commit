@@ -55,7 +55,7 @@ cp target/release/commit /usr/local/bin
 #### Add to programs on windows
 
 ```shell
-mkdir "C:\Program Files\commits"
+mkdir "C:\Program Files\commit"
 copy commit.exe "C:\Program Files\commit"
 ```
 
