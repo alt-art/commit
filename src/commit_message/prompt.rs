@@ -9,7 +9,7 @@ use inquire::{
 use anyhow::Result;
 
 pub struct Prompt {
-    config: RenderConfig,
+    config: RenderConfig<'static>,
 }
 
 impl Prompt {

@@ -1,3 +1,9 @@
+#![allow(
+    clippy::struct_field_names,
+    clippy::multiple_crate_versions,
+    clippy::module_name_repetitions
+)]
+
 mod commit;
 mod commit_message;
 mod commit_pattern;
