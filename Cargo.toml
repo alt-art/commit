@@ -22,7 +22,7 @@ str_to_string = "warn"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
 inquire = "0.7.5"
-serde = { version = "1.0.207", features = ["derive"] }
+serde = { version = "1.0.209", features = ["derive"] }
 serde_json = "1.0.127"
 clap = { version = "4.5.15", features = ["derive"] }
 dirs = "5.0.1"
