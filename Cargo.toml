@@ -30,7 +30,7 @@ anyhow = "1.0.89"
 
 [dev-dependencies]
 assert_fs = "1.1.2"
-serial_test = "3.1.1"
+serial_test = "3.2.0"
 
 [package.metadata.deb]
 name = "commit"
